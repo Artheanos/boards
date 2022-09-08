@@ -1,7 +1,6 @@
-import { MineSweeper } from 'mineSweeper/MineSweeper'
-import { randomInteger } from 'mineSweeper/random'
+import { MineSweeper } from 'mineSweeper'
 
-let bombPoints = [
+const bombPoints = [
     1, 1,
     2, 1,
 ]

@@ -15,10 +15,11 @@ module.exports = {
     ],
     rules: {
         'comma-dangle': ['error', 'always-multiline'],
+        'indent': ['error', 4],
         'object-curly-spacing': ['error', 'always'],
+        'quotes': ['error', 'single'],
         'semi': ['error', 'never'],
         'space-before-function-paren': ['error', 'never'],
-        'indent': ['error', 4],
-        'quotes': ['error', 'single'],
+        'prefer-const': 'error',
     },
 }

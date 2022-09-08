@@ -25,17 +25,17 @@ export class TicTacToe {
     updateStatus() {
         if (this.checkForDraw()) return this.status = 'draw'
 
-        for (let row of this.board) {
-            let winner = this.validateStreak(row)
+        for (const row of this.board) {
+            const winner = this.validateStreak(row)
             if (winner) return this.status = winner
         }
 
         for (let j = 0; j < 3; j++) {
-            let column = []
+            const column = []
             for (let i = 0; i < 3; i++) {
                 column.push(this.board[i][j])
             }
-            let winner = this.validateStreak(column)
+            const winner = this.validateStreak(column)
             if (winner) return this.status = winner
         }
 
@@ -63,15 +63,15 @@ export class TicTacToe {
     }
 
     validateStreak(streak: TicTacToe.Tile[]): TicTacToe.Player | null {
-        let result = streak[0]
-        if (this.isHomogenous(streak) && result !== TicTacToe.Tile.EMPTY) {
+        const result = streak[0]
+        if (TicTacToe.isHomogenous(streak) && result !== TicTacToe.Tile.EMPTY) {
             return result
         } else {
             return null
         }
     }
 
-    isHomogenous(array: number[]) {
+    static isHomogenous(array: number[]) {
         return new Set(array).size === 1
     }
 }
