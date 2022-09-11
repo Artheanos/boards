@@ -1,7 +1,6 @@
 import { Player, Point } from '../interface'
 import { Piece } from './Piece'
 import { Board } from '../Board'
-import { comparePoints } from '../utils'
 
 type Direction = 1 | -1
 
@@ -15,22 +14,14 @@ export class Pawn extends Piece {
         this.moved = false
     }
 
-    canMove(from: Point, to: Point): boolean {
-        if (super.canMove(from, to)) {
-            this.moved = true
-            return true
-        }
-        return false
-    }
-
-    movesWithoutCapture(from: Point): Point[] {
+    movesWithoutCapture(): Point[] {
         const tiles: Point[] = []
-        const pointer: Point = [...from]
         const range = this.moved ? 1 : 2
+        const pointer: Point = [...this.position]
 
         for (let i = 0; i < range; i++) {
             pointer[0] += this.direction
-            if (this.board.getItem(pointer)) break
+            if (!this.board.inRange(pointer) || this.board.getItem(pointer)) break
 
             tiles.push([...pointer])
         }
@@ -38,12 +29,12 @@ export class Pawn extends Piece {
         return tiles
     }
 
-    movesWithCapture(from: Point): Point[] {
+    movesWithCapture(): Point[] {
         const potentialTiles: Point[] = [
-            [from[0] + this.direction, from[1] + 1],
-            [from[0] + this.direction, from[1] - 1],
+            [this.position[0] + this.direction, this.position[1] + 1],
+            [this.position[0] + this.direction, this.position[1] - 1],
         ]
 
-        return potentialTiles.filter(point => this.board.getItem(point)?.color === this.enemy)
+        return potentialTiles.filter(point => this.board.inRange(point) && this.board.getItem(point)?.color === this.enemy)
     }
 }

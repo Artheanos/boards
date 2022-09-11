@@ -14,12 +14,14 @@ module.exports = {
         'jest',
     ],
     rules: {
+        '@typescript-eslint/no-extra-parens': 'error',
         'comma-dangle': ['error', 'always-multiline'],
         'indent': ['error', 4],
+        'keyword-spacing': ['error', { 'before': true }],
         'object-curly-spacing': ['error', 'always'],
+        'prefer-const': 'error',
         'quotes': ['error', 'single'],
         'semi': ['error', 'never'],
         'space-before-function-paren': ['error', 'never'],
-        'prefer-const': 'error',
     },
 }

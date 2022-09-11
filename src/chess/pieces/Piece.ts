@@ -7,6 +7,7 @@ export abstract class Piece {
     public board: Board
     public color: Player
     public type: PieceType
+    public position: Point
 
     protected enemy: Player
 
@@ -15,18 +16,27 @@ export abstract class Piece {
         this.color = color
         this.type = type || this.constructor.name.toLowerCase() as PieceType
 
+        this.position = [0, 0]
         this.enemy = this.color === 'white' ? 'black' : 'white'
     }
 
-    canMove(from: Point, to: Point): boolean {
-        return this.movesWithoutCapture(from, to)
-            .concat(this.movesWithCapture(from, to))
+    canMove(to: Point): boolean {
+        return this.movesWithoutCapture()
+            .concat(this.movesWithCapture())
             .some(point => comparePoints(point, to))
     }
 
-    movesWithoutCapture(from: Point, to: Point): Point[] { return [] }
+    movesWithoutCapture(): Point[] {
+        return this.moves().filter(i => this.board.getItem(i) === null)
+    }
 
-    movesWithCapture(from: Point, to: Point): Point[] { return [] }
+    movesWithCapture(): Point[] {
+        return this.moves().filter(i => this.board.getItem(i)?.color === this.enemy)
+    }
+
+    protected moves(): Point[] {
+        return []
+    }
 
     toString() {
         return `${this.color} ${this.type}`

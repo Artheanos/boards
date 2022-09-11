@@ -45,8 +45,10 @@ describe('Board', () => {
     describe('setItem', () => {
         it('replaces item in the position with a new value', () => {
             const newPiece = new Pawn(board, 'white')
+            expect(newPiece.position).toEqual([0, 0])
             board.setItem([0, 1], newPiece)
             expect(board.data).toEqual([[pawn, newPiece], [knight, rook]])
+            expect(newPiece.position).toEqual([0, 1])
         })
     })
 

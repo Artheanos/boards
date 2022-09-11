@@ -3,7 +3,14 @@ import { Piece } from './Piece'
 
 
 export class Rook extends Piece {
-    canMove(from: Point, to: Point): boolean {
-        return false
+    static straightDirections: Point[] = [
+        [0, 1],
+        [0, -1],
+        [-1, 0],
+        [1, 0],
+    ]
+
+    moves(): Point[] {
+        return this.board.iterator(this.position, Rook.straightDirections)
     }
 }

@@ -11,7 +11,7 @@ export class MineSweeper {
         this.width = width
         this.height = height
         this.board = createMatrix([height, width], 0)
-        this.placeMines((this.width * this.height / 10) >> 0)
+        this.placeMines(this.width * this.height / 10 >> 0)
         this.calculateNumbers()
     }
 
