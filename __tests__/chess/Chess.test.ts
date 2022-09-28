@@ -91,37 +91,43 @@ describe('Chess', () => {
 
             it('cannot move diagonally', () => {
                 const actionPiece = chess.board.getItem(point('a7'))
-                const moveResult = chess.move(point('a7'), [2, 1])
+                const moveResult = chess.move(point('a7'), point('b6'))
 
                 expect(moveResult).toBe(false)
                 expect(chess.board.getItem(point('a7'))).toBe(actionPiece)
-                expect(chess.board.getItem([2, 1])).toBe(null)
+                expect(chess.board.getItem(point('b6'))).toBe(null)
+            })
+
+            it('cannot move if it would expose the king', () => {
+                chess.board.moveItem(point('c1'), point('a4'))
+                const moveResult = chess.move(point('d7'), point('d6'))
+                expect(moveResult).toBe(false)
             })
         })
 
         describe('capturing', () => {
             describe('when there is a piece diagonally 1 tile away from and in front of the pawn', () => {
                 it('captures a piece when it is white', () => {
-                    chess.board.setItem([2, 1], new Knight(chess.board, 'white'))
+                    chess.board.setItem(point('b6'), new Knight(chess.board, 'white'))
 
                     const actionPiece = chess.board.getItem(point('a7'))
-                    const moveResult = chess.move(point('a7'), [2, 1])
+                    const moveResult = chess.move(point('a7'), point('b6'))
 
                     expect(moveResult).toBe(true)
                     expect(chess.board.getItem(point('a7'))).toBe(null)
-                    expect(chess.board.getItem([2, 1])).toBe(actionPiece)
+                    expect(chess.board.getItem(point('b6'))).toBe(actionPiece)
                 })
 
                 it('does not capture a piece when it is black', () => {
                     const targetPiece = new Knight(chess.board, 'black')
-                    chess.board.setItem([2, 1], targetPiece)
+                    chess.board.setItem(point('b6'), targetPiece)
 
                     const actionPiece = chess.board.getItem(point('a7'))
-                    const moveResult = chess.move(point('a7'), [2, 1])
+                    const moveResult = chess.move(point('a7'), point('b6'))
 
                     expect(moveResult).toBe(false)
                     expect(chess.board.getItem(point('a7'))).toBe(actionPiece)
-                    expect(chess.board.getItem([2, 1])).toBe(targetPiece)
+                    expect(chess.board.getItem(point('b6'))).toBe(targetPiece)
                 })
             })
         })

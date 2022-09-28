@@ -1,6 +1,7 @@
 import { PieceType, Player, Point } from '../interface'
 import { Board } from '../Board'
 import { comparePoints } from '../utils'
+import { King } from './King'
 
 
 export abstract class Piece {
@@ -8,6 +9,7 @@ export abstract class Piece {
     public color: Player
     public type: PieceType
     public position: Point
+    public moved: boolean
 
     protected enemy: Player
 
@@ -18,6 +20,7 @@ export abstract class Piece {
 
         this.position = [0, 0]
         this.enemy = this.color === 'white' ? 'black' : 'white'
+        this.moved = false
     }
 
     canMove(to: Point): boolean {
@@ -27,15 +30,42 @@ export abstract class Piece {
     }
 
     movesWithoutCapture(): Point[] {
-        return this.moves().filter(i => this.board.getItem(i) === null)
+        return this._movesWithoutCapture().filter(point => !this.exposesKing(point))
     }
 
     movesWithCapture(): Point[] {
-        return this.moves().filter(i => this.board.getItem(i)?.color === this.enemy)
+        return this._movesWithCapture().filter(point => !this.exposesKing(point))
+    }
+
+    _movesWithoutCapture(): Point[] {
+        return this.moves().filter(point => this.board.getItem(point) === null)
+    }
+
+    _movesWithCapture(): Point[] {
+        return this.moves().filter(point => this.board.getItem(point)?.color === this.enemy)
     }
 
     protected moves(): Point[] {
         return []
+    }
+
+    protected exposesKing(targetPosition: Point): boolean {
+        let result = true
+        const thisPosition = this.position
+        const targetPiece = this.board.getItem(targetPosition)
+        this.board.setItem(thisPosition, targetPiece)
+        this.board.setItem(targetPosition, this)
+
+        for (const piece of this.board.pieces()) {
+            if (piece.constructor.name === 'King' && piece.color === this.color) {
+                result = (piece as any).canBeCaptured()
+                this.board.setItem(thisPosition, this)
+                this.board.setItem(targetPosition, targetPiece)
+                break
+            }
+        }
+
+        return result
     }
 
     toString() {

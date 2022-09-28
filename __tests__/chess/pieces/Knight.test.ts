@@ -12,8 +12,8 @@ describe('Knight', () => {
 
     it('when', () => {
         const knight = board.getItem(point('b8')) as Knight
-        const movesWithoutCapture = knight.movesWithoutCapture().map(pointToString)
-        const movesWithCapture = knight.movesWithCapture().map(pointToString)
+        const movesWithoutCapture = knight._movesWithoutCapture().map(pointToString)
+        const movesWithCapture = knight._movesWithCapture().map(pointToString)
 
         expect(movesWithoutCapture).toEqual(['a6', 'c6'])
         expect(movesWithCapture).toEqual([])
@@ -22,8 +22,8 @@ describe('Knight', () => {
     it('when knight is next to the enemy\'s row', () => {
         const knight = board.getItem(point('b8')) as Knight
         board.moveItem(point('b8'), point('b3'))
-        const movesWithoutCapture = knight.movesWithoutCapture().map(pointToString)
-        const movesWithCapture = knight.movesWithCapture().map(pointToString)
+        const movesWithoutCapture = knight._movesWithoutCapture().map(pointToString)
+        const movesWithCapture = knight._movesWithCapture().map(pointToString)
 
         expect(movesWithoutCapture.sort()).toEqual(['a5', 'c5', 'd4'])
         expect(movesWithCapture.sort()).toEqual(['a1', 'c1', 'd2'])

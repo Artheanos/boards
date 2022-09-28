@@ -11,6 +11,6 @@ export class Bishop extends Piece {
     ]
 
     moves(): Point[] {
-        return this.board.iterator(this.position, Bishop.diagonalDirections)
+        return this.board.directionalIterator(this.position, Bishop.diagonalDirections)
     }
 }

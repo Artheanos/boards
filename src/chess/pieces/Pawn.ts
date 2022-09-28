@@ -6,15 +6,13 @@ type Direction = 1 | -1
 
 export class Pawn extends Piece {
     public direction: Direction
-    public moved: boolean
 
     constructor(board: Board, color: Player) {
         super(board, color, 'pawn')
         this.direction = this.color === 'black' ? 1 : -1
-        this.moved = false
     }
 
-    movesWithoutCapture(): Point[] {
+    _movesWithoutCapture(): Point[] {
         const tiles: Point[] = []
         const range = this.moved ? 1 : 2
         const pointer: Point = [...this.position]
@@ -29,7 +27,7 @@ export class Pawn extends Piece {
         return tiles
     }
 
-    movesWithCapture(): Point[] {
+    _movesWithCapture(): Point[] {
         const potentialTiles: Point[] = [
             [this.position[0] + this.direction, this.position[1] + 1],
             [this.position[0] + this.direction, this.position[1] - 1],

@@ -1,6 +1,7 @@
 import { Player, Point } from './interface'
 import { Bishop, King, Knight, Pawn, Queen, Rook } from './pieces'
 import { Board } from './Board'
+import { comparePoints } from './utils'
 
 export class Chess {
     public board: Board
@@ -25,7 +26,15 @@ export class Chess {
         if (piece === null || piece.color !== this.currentPlayer) return false
 
         if (piece.canMove(to)) {
+            if (piece instanceof King) {
+                const castlingMove = piece.castlingMoves().find(({ kingNewPosition }) => comparePoints(kingNewPosition, to))
+                if (castlingMove) {
+                    this.board.moveItem(castlingMove.rook.position, castlingMove.rookNewPosition)
+                    castlingMove.rook.moved = true
+                }
+            }
             this.board.moveItem(from, to)
+            piece.moved = true
             this.toggleCurrentPlayer()
             return true
         }

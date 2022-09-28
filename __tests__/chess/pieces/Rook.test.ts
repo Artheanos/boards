@@ -13,8 +13,8 @@ describe('Rook', () => {
     it('when pawn next to the rook is removed', () => {
         const rook = board.getItem(point('a8')) as Rook
         board.setItem(point('a7'), null)
-        const movesWithoutCapture = rook.movesWithoutCapture().map(pointToString)
-        const movesWithCapture = rook.movesWithCapture().map(pointToString)
+        const movesWithoutCapture = rook._movesWithoutCapture().map(pointToString)
+        const movesWithCapture = rook._movesWithCapture().map(pointToString)
 
         expect(movesWithoutCapture).toEqual(['a7', 'a6', 'a5', 'a4', 'a3'])
         expect(movesWithCapture).toEqual(['a2'])
@@ -23,8 +23,8 @@ describe('Rook', () => {
     it('when rook is next to the enemy\'s row', () => {
         const rook = board.getItem(point('a8')) as Rook
         board.moveItem(point('a8'), point('d3'))
-        const movesWithoutCapture = rook.movesWithoutCapture().map(pointToString)
-        const movesWithCapture = rook.movesWithCapture().map(pointToString)
+        const movesWithoutCapture = rook._movesWithoutCapture().map(pointToString)
+        const movesWithCapture = rook._movesWithCapture().map(pointToString)
 
         expect(movesWithoutCapture.sort()).toEqual(['a3', 'b3', 'c3', 'd4', 'd5', 'd6', 'e3', 'f3', 'g3', 'h3'])
         expect(movesWithCapture).toEqual(['d2'])

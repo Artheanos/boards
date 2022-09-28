@@ -1,4 +1,4 @@
-import { Pawn, Piece } from './pieces'
+import { Piece } from './pieces'
 import { Point } from './interface'
 
 type BoardItem = Piece | null
@@ -33,14 +33,13 @@ export class Board {
         const item = this.getItem(from)
         this.setItem(to, item)
         this.setItem(from, null)
-        if (item instanceof Pawn) item.moved = true
     }
 
     public inRange([i, j]: Point): boolean {
         return i >= 0 && i < this.height && j >= 0 && j < this.width
     }
 
-    public iterator(from: Point, directions: Point[], range?: number): Point[] {
+    public directionalIterator(from: Point, directions: Point[], range?: number): Point[] {
         const result: Point[] = []
 
         for (const direction of directions) {
@@ -62,6 +61,14 @@ export class Board {
         return result
     }
 
+    public *pieces(): Generator<Piece, void> {
+        for (const row of this.data) {
+            for (const piece of row) {
+                if (piece !== null) yield piece
+            }
+        }
+    }
+
     private updatePositions() {
         for (let i = 0; i < this.height; i++) {
             for (let j = 0; j < this.width; j++) {
@@ -72,5 +79,9 @@ export class Board {
                 piece.position = [...position]
             }
         }
+    }
+
+    print() {
+        return this.data.map(row => row.map(i => i?.toString() || null))
     }
 }

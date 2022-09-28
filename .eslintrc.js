@@ -22,6 +22,10 @@ module.exports = {
         'prefer-const': 'error',
         'quotes': ['error', 'single'],
         'semi': ['error', 'never'],
-        'space-before-function-paren': ['error', 'never'],
+        'space-before-function-paren': ['error', {
+            'anonymous': 'always',
+            'asyncArrow': 'always',
+            'named': 'never',
+        }],
     },
 }
