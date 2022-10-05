@@ -9,7 +9,7 @@ export class Knight extends Piece {
         [2, 1],
     ]
 
-    moves() {
+    _moves() {
         const tiles: Point[] = []
 
         for (const direction of Bishop.diagonalDirections) {

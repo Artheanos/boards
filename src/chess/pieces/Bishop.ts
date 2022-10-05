@@ -10,7 +10,7 @@ export class Bishop extends Piece {
         [1, 1],
     ]
 
-    moves(): Point[] {
+    _moves(): Point[] {
         return this.board.directionalIterator(this.position, Bishop.diagonalDirections)
     }
 }

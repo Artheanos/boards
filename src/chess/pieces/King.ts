@@ -1,7 +1,5 @@
+import { Bishop, Piece, Rook } from './'
 import { Point } from '../interface'
-import { Piece } from './Piece'
-import { Bishop } from './Bishop'
-import { Rook } from './Rook'
 
 type CastlingMove = {
     kingNewPosition: Point
@@ -10,7 +8,7 @@ type CastlingMove = {
 }
 
 export class King extends Piece {
-    protected moves(): Point[] {
+    protected _moves(): Point[] {
         const directions = Bishop.diagonalDirections.concat(Rook.straightDirections)
         return this.board.directionalIterator(this.position, directions, 1).concat(this.castlingMoves().map(i => i.kingNewPosition))
     }
@@ -45,9 +43,7 @@ export class King extends Piece {
     canBeCaptured() {
         const stringPosition = this.position.join(',')
 
-        for (const piece of this.board.pieces()) {
-            if (piece.color === this.color) continue
-
+        for (const piece of this.board.pieces(this.enemy)) {
             if (piece._movesWithCapture().some(point => point.join(',') === stringPosition)) return true
         }
 

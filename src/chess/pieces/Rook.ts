@@ -10,7 +10,7 @@ export class Rook extends Piece {
         [1, 0],
     ]
 
-    moves(): Point[] {
+    _moves(): Point[] {
         return this.board.directionalIterator(this.position, Rook.straightDirections)
     }
 }

@@ -1,6 +1,6 @@
 import { PieceType, Player, Point } from '../interface'
 import { Board } from '../Board'
-import { comparePoints } from '../utils'
+import { comparePoints, enemyOf } from '../utils'
 import { King } from './King'
 
 
@@ -19,14 +19,16 @@ export abstract class Piece {
         this.type = type || this.constructor.name.toLowerCase() as PieceType
 
         this.position = [0, 0]
-        this.enemy = this.color === 'white' ? 'black' : 'white'
+        this.enemy = enemyOf(this.color)
         this.moved = false
     }
 
     canMove(to: Point): boolean {
-        return this.movesWithoutCapture()
-            .concat(this.movesWithCapture())
-            .some(point => comparePoints(point, to))
+        return this.moves().some(point => comparePoints(point, to))
+    }
+
+    moves(): Point[] {
+        return this.movesWithoutCapture().concat(this.movesWithCapture())
     }
 
     movesWithoutCapture(): Point[] {
@@ -38,14 +40,14 @@ export abstract class Piece {
     }
 
     _movesWithoutCapture(): Point[] {
-        return this.moves().filter(point => this.board.getItem(point) === null)
+        return this._moves().filter(point => this.board.getItem(point) === null)
     }
 
     _movesWithCapture(): Point[] {
-        return this.moves().filter(point => this.board.getItem(point)?.color === this.enemy)
+        return this._moves().filter(point => this.board.getItem(point)?.color === this.enemy)
     }
 
-    protected moves(): Point[] {
+    protected _moves(): Point[] {
         return []
     }
 
@@ -56,13 +58,13 @@ export abstract class Piece {
         this.board.setItem(thisPosition, targetPiece)
         this.board.setItem(targetPosition, this)
 
-        for (const piece of this.board.pieces()) {
-            if (piece.constructor.name === 'King' && piece.color === this.color) {
-                result = (piece as any).canBeCaptured()
-                this.board.setItem(thisPosition, this)
-                this.board.setItem(targetPosition, targetPiece)
-                break
-            }
+        for (const piece of this.board.pieces(this.color)) {
+            if (piece.constructor.name !== 'King') continue
+
+            result = (piece as any).canBeCaptured()
+            this.board.setItem(thisPosition, this)
+            this.board.setItem(targetPosition, targetPiece)
+            break
         }
 
         return result

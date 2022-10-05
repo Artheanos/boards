@@ -5,7 +5,7 @@ import { Rook } from './Rook'
 
 
 export class Queen extends Piece {
-    protected moves(): Point[] {
+    protected _moves(): Point[] {
         return this.board.directionalIterator(this.position, Bishop.diagonalDirections.concat(Rook.straightDirections))
     }
 }

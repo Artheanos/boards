@@ -1,11 +1,12 @@
 import { Player, Point } from './interface'
-import { Bishop, King, Knight, Pawn, Queen, Rook } from './pieces'
+import { Bishop, King, Knight, Pawn, Piece, Queen, Rook } from './pieces'
 import { Board } from './Board'
-import { comparePoints } from './utils'
+import { comparePoints, enemyOf } from './utils'
 
 export class Chess {
     public board: Board
     public currentPlayer: Player = 'white'
+    public winner?: Player
 
     constructor() {
         this.board = new Board()
@@ -23,26 +24,38 @@ export class Chess {
 
     public move(from: Point, to: Point): boolean {
         const piece = this.board.getItem(from)
-        if (piece === null || piece.color !== this.currentPlayer) return false
+        if (piece === null || !this.moveIsValid(piece, to)) return false
 
-        if (piece.canMove(to)) {
-            if (piece instanceof King) {
-                const castlingMove = piece.castlingMoves().find(({ kingNewPosition }) => comparePoints(kingNewPosition, to))
-                if (castlingMove) {
-                    this.board.moveItem(castlingMove.rook.position, castlingMove.rookNewPosition)
-                    castlingMove.rook.moved = true
-                }
-            }
-            this.board.moveItem(from, to)
-            piece.moved = true
+        this.handleCastling(piece, to)
+        this.board.moveItem(from, to)
+        piece.moved = true
+        if (this.currentPlayerIsWinner()) {
+            this.winner = this.currentPlayer
+        } else {
             this.toggleCurrentPlayer()
-            return true
         }
+        return true
+    }
 
-        return false
+    private moveIsValid(piece: Piece, to: Point) {
+        return piece.color === this.currentPlayer && piece.canMove(to)
+    }
+
+    private handleCastling(piece: Piece, to: Point) {
+        if (piece instanceof King) {
+            const castlingMove = piece.castlingMoves().find(({ kingNewPosition }) => comparePoints(kingNewPosition, to))
+            if (castlingMove) {
+                this.board.moveItem(castlingMove.rook.position, castlingMove.rookNewPosition)
+                castlingMove.rook.moved = true
+            }
+        }
+    }
+
+    private currentPlayerIsWinner() {
+        return this.board.movesCount(enemyOf(this.currentPlayer)) === 0
     }
 
     private toggleCurrentPlayer() {
-        this.currentPlayer = this.currentPlayer === 'white' ? 'black' : 'white'
+        this.currentPlayer = enemyOf(this.currentPlayer)
     }
 }

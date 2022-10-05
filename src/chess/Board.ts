@@ -1,5 +1,5 @@
 import { Piece } from './pieces'
-import { Point } from './interface'
+import { Player, Point } from './interface'
 
 type BoardItem = Piece | null
 type BoardData = BoardItem[][]
@@ -61,12 +61,22 @@ export class Board {
         return result
     }
 
-    public *pieces(): Generator<Piece, void> {
+    public* pieces(ofPlayer?: Player): Generator<Piece, void> {
         for (const row of this.data) {
             for (const piece of row) {
-                if (piece !== null) yield piece
+                if (piece === null || ofPlayer && piece.color !== ofPlayer) continue
+
+                yield piece
             }
         }
+    }
+
+    public movesCount(player: Player) {
+        let result = 0
+        for (const piece of this.pieces(player)) {
+            result += piece.moves().length
+        }
+        return result
     }
 
     private updatePositions() {
